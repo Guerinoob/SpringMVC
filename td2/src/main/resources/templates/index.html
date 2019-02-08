@@ -1,0 +1,36 @@
+{{> header}}
+
+	<h1>SpringBoot TD N°2</h1>
+	<h2>Application de messagerie</h2>
+	
+	<fieldset>
+		<a href="new"><button>Ajouter une nouvelle organisation</button></a>
+		
+		<br /><br />
+		
+		<table border="1" width="100%">
+			<tr>
+				<td>ID</td>
+				<td>Name</td>
+				<td>Domain</td>
+				<td>Aliases</td>
+				<td></td>
+			</tr>
+			
+			{{#orgas}}
+				<tr>
+					<td>{{id}}</td>
+					<td>{{name}}</td>
+					<td>{{domain}}</td>
+					<td>{{aliases}}</td>
+					<td><a href="display/{{id}}">Voir</a>
+						<a href="edit/{{id}}">Modifier</a>
+						<a href="delete/{{id}}">Supprimer</a>
+					</td>
+				</tr>
+			{{/orgas}}
+			
+		</table>
+	</fieldset>
+
+{{> footer}}
