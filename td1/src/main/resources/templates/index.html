@@ -1,0 +1,22 @@
+{{> header}}
+
+<h1>Elements hjkhkjhjkh</h1>
+
+<table border="1" width="100%">
+{{#elements}}
+  <tr>
+  	<td>{{nom}}</td>
+  	<td>{{evaluation}}</td>
+  	<td><a href="inc/{{nom}}"><button>+1</button></a></td>
+  	<td><a href="desc/{{nom}}"><button>-1</button></a></td>
+  </tr>
+{{/elements}}
+</table>
+
+<form method="GET" action="new"><input type="submit" value="Ajouter un élément" class="ui-button" /></form>
+
+{{^elements}}
+  Aucun element ! :(
+{{/elements}}
+
+{{> footer}}
