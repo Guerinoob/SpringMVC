@@ -1,6 +1,6 @@
 {{> header}}
 
-	<h1>SpringBoot TD N°2</h1>
+	<h1>SpringBoot TD NÂ°2</h1>
 	<h2>Application de messagerie</h2>
 	
 	<fieldset>
@@ -8,15 +8,19 @@
 		
 		<br /><br />
 		
-		<a href="../index"><button>Fermer</button></a>
-		<a href="../delete/{{orga.id}}"><button>Supprimer</button></a>
-		<a href="../edit/{{orga.id}}"><button>Modifier</button></a>
+		<a href="../index"><button class="ui labeled icon button"><i class="close icon"></i>Fermer</button></a>
+		<a href="../delete/{{orga.id}}"><button class="ui labeled icon basic negative button"><i class="close icon"></i>Supprimer <b>{{orga.name}}</b></button></a>
+		<a href="../edit/{{orga.id}}"><button class="ui labeled icon button"><i class="edit icon"></i>Modifier</button></a>
 		
-		<table border="1" width="100%">
-			<tr><td><b>Id</b></td><td>{{orga.id}}</td></tr>
-			<tr><td><b>Name</b></td><td>{{orga.name}}</td></tr>
-			<tr><td><b>Domain</b></td><td>{{orga.domain}}</td></tr>
-			<tr><td><b>Aliases</b></td><td>{{orga.aliases}}</td></tr>
+		
+		
+		<table class="ui celled table">
+			<tr><td><b>Id</b></td>	<td data-label="Id">{{orga.id}}</td></tr>
+			<tr><td><b>Name</b></td>	<td data-label="Name">{{orga.name}}</td></tr>
+			<tr><td><b>Domain</b></td>	<td data-label="Domain">{{orga.domain}}</td></tr>
+			<tr><td><b>Aliases</b></td>	<td data-label="Aliases">{{orga.aliases}}</td></tr>
+			<tr><td><b>Groups</b></td>	<td data-label="Groups">{{#orga.groupes}} {{name}}<br /> {{/orga.groupes}}</td></tr>
+			<tr><td><b>Users</b></td>	<td data-label="Users">{{#orga.users}} {{firstName}} {{lastName}}<br /> {{/orga.users}}</td></tr>
 		</table>
 	</fieldset>
 

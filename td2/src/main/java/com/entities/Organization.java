@@ -25,7 +25,7 @@ public class Organization {
 	@OrderColumn
 	private List<Groupe> groupes;
 	
-	private String organizationSettings;
+	private String organizationSettings = "";
 	
 	@OneToMany(cascade=CascadeType.ALL,mappedBy="organization")
 	@OrderColumn

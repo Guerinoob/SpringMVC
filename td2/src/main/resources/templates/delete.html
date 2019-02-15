@@ -33,6 +33,17 @@
 			{{/orgas}}
 			</tbody>
 		</table>
+		
+		<div class="ui negative message">
+		  <i class="close icon"></i>
+		  <div class="header">
+		    Confirmation de suppression
+		  </div>
+		  <p>Confirmez-vous la suppression de "<b>{{orgaSuppr.name}}</b>"</p>
+		  <hr />
+		  	<a href="../index"><button class="ui labeled icon button"><i class="circle outline icon"></i>Annuler</button></a>
+			<a href="../delete:{{orgaSuppr.id}}"><button class="ui labeled icon negative button"><i class="check circle icon"></i>Confirmer</button></a>
+		</div>
 			
 	</fieldset>
 

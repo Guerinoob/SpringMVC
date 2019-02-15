@@ -1,0 +1,35 @@
+{{> header}}
+
+	<h1>SpringBoot TD N°2</h1>
+	<h2>Application de messagerie</h2>
+	
+	<div class="ui form">
+	
+	<form method="POST" action="../editOrga">
+	
+		<div class="field">
+			<label for="name">Name :</label>
+			<input type="text" id="name" name="name" placeholder="Name" value="{{orga.name}}" />
+		</div>
+		
+		<div class="field">
+			<label for="domain">Domain :</label>
+			<input type="text" id="domain" name="domain" placeholder="Domain :" value="{{orga.domain}}" />
+		</div>
+		
+		<div class="field">
+			<label for="aliases">Aliases :</label>
+			<input type="text" id="aliases" name="aliases" placeholder="Aliases :" value="{{orga.aliases}}" />
+		</div>
+		
+		<div class="ui segment">
+			<button type="submit" class="ui labeled icon positive button"><i class="check circle icon"></i>Validate</button>
+			<a href="index"><button class="ui labeled icon button"><i class="circle outline icon"></i>Cancel</button></a>
+			<input type="hidden" name="id" id="id" value="{{orga.id}}" />
+		</div>
+		
+	</form>
+		
+	</div>
+
+{{> footer}}
