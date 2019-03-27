@@ -1,0 +1,70 @@
+{{ > header}}
+
+	<form method="POST" action="http://localhost:8080/script/submit" class="ui fluid form">
+	
+		<fieldset>
+		<legend>Add a script</legend>
+		
+		<div class="field">
+			<label for="title">Title : </label>
+				<input type="text" name="title" id="title" value="{{script.title}}"/>
+		</div>
+		
+		<div class="field">
+			<label for="description">Description : </label>
+				<input type="text" name="description" id="description" value="{{script.description}}"/>
+		</div>
+		
+		<div class="field">
+			<label for="content">Content : </label>
+				<textarea name="content" id="content" value="{{script.content}}"></textarea>
+		</div>
+		
+		<div class="field">
+			<label for="creationDate">Creation Date : </label>
+				<input type="text" name="creationDate" id="creationDate" value="{{script.creationDate}}"/>
+		</div>
+		
+		
+		
+		
+		<div class="field">
+			<label for="category">Category : </label>
+			
+				<select name="category" id="category">
+					<option value="{{selectedCategory.id}}" selected>{{selectedCategory.name}}</option>
+					{{#categories}}
+						<option value="{{id}}">{{name}}</option>
+					{{/categories}}
+				</select>
+		</div>
+		
+		
+		
+		<div class="field">
+			<label for="language">Language : </label>
+			
+				<select name="language" id="language">
+				
+					<option value="{{selectedLanguage.id}}" selected>{{selectedLanguage.name}}</option>
+					{{#languages}}
+						<option value="{{id}}">{{name}}</option>
+					{{/languages}}
+				</select>
+		</div>
+		
+		<input type="hidden" name="id" id="id" value="{{script.id}}" />
+		
+		
+		<div class="ui segment">
+			<input type="submit" class="ui positive button" value="Add" />
+			
+			<button class="ui neutral button"><a href="http://localhost:8080/index">Cancel</a></button>
+		</div>
+		
+		
+		</fieldset>
+	
+	</form>
+
+{{ > footer}}

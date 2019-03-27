@@ -1,0 +1,33 @@
+{{ > header}}
+
+	<h2>Welcome {{user.identity}} ({{user.email}}). <a href="http://localhost:8080/logout">Disconnect</a></h2>
+	
+	<h3>Search for scripts : </h3>
+	
+	<label for="search">Search : </label></label><input type="text" name="search" id="search" />
+	
+	<table class="ui single-line table">
+		<thead>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Creation date</th>
+		</tr>
+		</thead>
+	
+		<tbody>
+			{{#user.scripts}}
+				<tr>
+					<td>{{id}}</td>
+					<td><a href="script/{{id}}">{{title}}</a></td>
+					<td>{{description}}</td>
+					<td>{{creationDate}}</td>
+				</tr>
+			{{/user.scripts}}
+		</tbody>
+	</table>
+	
+	<button class="ui neutral button"><a href="http://localhost:8080/script/new">Add a script</a></button>
+
+{{ > footer}}
