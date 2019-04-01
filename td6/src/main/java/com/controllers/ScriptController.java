@@ -8,7 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -235,24 +238,28 @@ public class ScriptController {
 	}
 	
 	
-	
-	
-	
+
 	@RequestMapping("search")
-	@ResponseBody
-	public String search() {
+	public String search(ModelMap model) {
 		
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<List<Script>> response = restTemplate.exchange("http://localhost:8080/rest/"+user.getId(), HttpMethod.GET, null, new ParameterizedTypeReference<List<Script>>(){});
- 
-		List<Script> scripts = response.getBody();
+		if(user != null) {
 		
-		String chaine = "";
-		for(Script s : scripts){
-			chaine += s.getTitle()+"<br />";
+			RestTemplate restTemplate = new RestTemplate();
+			HttpHeaders header = new HttpHeaders();
+			header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			
+			HttpEntity entity = new HttpEntity<>(header);
+			/*ResponseEntity<List<Script>> response = restTemplate.exchange("http://localhost:8080/rest/"+user.getId(), HttpMethod.POST, entity, new ParameterizedTypeReference<List<Script>>(){});
+	 
+			List<Script> scripts = response.getBody();*/
+			
+			model.addAttribute("scriptsTrouves", user.getScripts());
+			model.addAttribute("user", user);
+				
+			return "search";
 		}
-		
-		return chaine;
+		else
+			return "login";
 	}
 
 }

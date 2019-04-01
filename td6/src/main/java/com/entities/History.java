@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.StringIdGenerator.class,
-        property="id")
+        property="idHistory")
 @Entity
 public class History {
 	
