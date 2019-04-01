@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.StringIdGenerator.class,
-        property="id")
+        property="idScript")
 @Entity
 public class Script {
 	
