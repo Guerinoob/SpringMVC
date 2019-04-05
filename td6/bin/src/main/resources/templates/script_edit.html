@@ -1,6 +1,6 @@
 {{ > header}}
 
-	<form method="POST" action="{{address}}/script/submit" class="ui fluid form">
+	<form method="POST" action="http://localhost:8080/script/submit" class="ui fluid form">
 	
 		<fieldset>
 		<legend>Add a script</legend>
@@ -51,21 +51,15 @@
 						<option value="{{id}}">{{name}}</option>
 					{{/languages}}
 				</select>
-        </div>
-        
-
-        <div class="field">
-			<label for="comment">Comment on modification : </label>
-				<input type="text" name="comment" id="comment"/>
 		</div>
 		
 		<input type="hidden" name="id" id="id" value="{{script.id}}" />
 		
 		
 		<div class="ui segment">
-			<input type="submit" class="ui positive button" value="Modify" />
+			<input type="submit" class="ui positive button" value="Add" />
 			
-			<button class="ui neutral button"><a href="{{address}}/index">Cancel</a></button>
+			<button class="ui neutral button"><a href="http://localhost:8080/index">Cancel</a></button>
 		</div>
 		
 		

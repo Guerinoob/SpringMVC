@@ -1,6 +1,7 @@
 package com.controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,12 +28,17 @@ public class ScriptRestController {
 	public ResponseEntity<String> get(@PathVariable("id_user") int userId, HttpServletRequest request) throws JSONException {
 
 		String search = "";
+		String searchOptions = "";
+		List<String> options;
 		
 		try {
-			search = request.getParameter("search");		
+			search = request.getParameter("search");	
+			searchOptions = request.getParameter("searchOptions");
 		} catch(NullPointerException e) {
 			
 		}
+		
+		options = Arrays.asList(searchOptions.split(","));
 		
 		
 		List<Script> all = scriptRepository.findAll();
@@ -42,8 +48,17 @@ public class ScriptRestController {
 		for(Script s : all) {
 			if(s.getUser().getId() == userId) {
 				
-				if(s.getTitle().contains(search))
-					scripts.add(s);
+				if(options.contains("title"))
+					if(s.getTitle().toLowerCase().contains(search) && !scripts.contains(s))
+						scripts.add(s);
+				
+				if(options.contains("description"))
+					if(s.getDescription().toLowerCase().contains(search) && !scripts.contains(s))
+						scripts.add(s);
+				
+				if(options.contains("creationDate"))
+					if(s.getCreationDate().toLowerCase().contains(search) && !scripts.contains(s))
+						scripts.add(s);
 			}
 		}
 		
@@ -56,6 +71,12 @@ public class ScriptRestController {
 			html += "<td><a href=\"script/"+s.getId()+"\">"+s.getTitle()+"</td>";
 			html += "<td>"+s.getDescription()+"</td>";
 			html += "<td>"+s.getCreationDate()+"</td>";
+			html += "<td><a href=\""+ScriptController.address+"/script/delete/"+s.getId()+"\">\n" + 
+					"                            <button class=\"circular red ui icon button\" >\n" + 
+					"                                <i class=\"delete icon\"></i>\n" + 
+					"                            </button>\n" + 
+					"                        </a>\n" + 
+					"                    </td>";
 			
 			html += "</tr>";
 		}

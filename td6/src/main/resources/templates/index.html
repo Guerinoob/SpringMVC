@@ -1,8 +1,8 @@
 {{ > header}}
 
-	<h2>Welcome {{user.identity}} ({{user.email}}). <a href="http://localhost:8080/logout">Disconnect</a></h2>
+	<h2>Welcome {{user.identity}} ({{user.email}}). <a href="{{address}}/logout">Disconnect</a></h2>
 	
-	<h3><a href="http://localhost:8080/search">Go to the search page</a></h3>
+	<h3><a href="{{address}}/search">Go to the search page</a></h3>
 	
 	<h3>Your scripts : </h3>
 	
@@ -12,7 +12,8 @@
 			<th>ID</th>
 			<th>Name</th>
 			<th>Description</th>
-			<th>Creation date</th>
+            <th>Creation date</th>
+            <th></th>
 		</tr>
 		</thead>
 	
@@ -22,12 +23,18 @@
 					<td>{{id}}</td>
 					<td><a href="script/{{id}}">{{title}}</a></td>
 					<td>{{description}}</td>
-					<td>{{creationDate}}</td>
+                    <td>{{creationDate}}</td>
+                    <td><a href="{{address}}/script/delete/{{id}}">
+                            <button class="circular red ui icon button" >
+                                <i class="delete icon"></i>
+                            </button>
+                        </a>
+                    </td>
 				</tr>
 			{{/user.scripts}}
 		</tbody>
 	</table>
 	
-	<button class="ui neutral button"><a href="http://localhost:8080/script/new">Add a script</a></button>
+	<button class="ui neutral button"><a href="{{address}}/script/new">Add a script</a></button>
 
 {{ > footer}}

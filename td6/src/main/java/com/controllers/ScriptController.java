@@ -1,18 +1,15 @@
 package com.controllers;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +17,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.entities.Category;
+import com.entities.History;
 import com.entities.Language;
 import com.entities.Script;
 import com.entities.User;
@@ -52,6 +49,21 @@ public class ScriptController {
 	private UserRepository userRepository;
 	
 	private User user;
+	
+	public static final String address = "http://localhost:4040";
+	
+	
+	
+	public void setUserScripts() {
+		List<Script> allScripts = scriptRepository.findAll();
+		List<Script> usersScript = new ArrayList<>();
+		
+		for(Script s : allScripts) {
+			if(s.getUser().getId() == user.getId())
+			usersScript.add(s);
+		}
+		user.setScripts(usersScript);
+	}
 	
 	
 	@RequestMapping("/createAll")
@@ -91,7 +103,8 @@ public class ScriptController {
 	
 	
 	@RequestMapping("/login")
-	public String loginPage() {
+	public String loginPage(ModelMap model) {
+		model.addAttribute("address", address);
 		return "login";
 	}
 	
@@ -109,14 +122,7 @@ public class ScriptController {
 			if(u.getLogin().equals(connection.getLogin()) && u.getPassword().equals(connection.getPassword())) {
 				user = u;
 
-				List<Script> allScripts = scriptRepository.findAll();
-				List<Script> usersScript = new ArrayList<>();
-				
-				for(Script s : allScripts) {
-					if(s.getUser().getId() == user.getId())
-					usersScript.add(s);
-				}
-				user.setScripts(usersScript);
+				setUserScripts();
 				
 				return new RedirectView("index");
 			}
@@ -134,8 +140,9 @@ public class ScriptController {
 	
 	
 	
-	@RequestMapping("/index")
+	@RequestMapping({"/index", ""})
 	public String index(ModelMap model) {
+		model.addAttribute("address", address);
 		if(user != null) {
 			model.addAttribute("user", user);
 			return "index";
@@ -149,6 +156,7 @@ public class ScriptController {
 	
 	@RequestMapping("/script/new")
 	public String scriptNew(ModelMap model) {
+		model.addAttribute("address", address);
 		if(user != null) {
 			List<Category> categories = categoryRepository.findAll();
 			
@@ -162,23 +170,28 @@ public class ScriptController {
 	}
 	
 	@PostMapping("/script/submit")
-	public RedirectView addScript(Script script) {
+	public RedirectView addScript(Script script, @Nullable HttpServletRequest request) {
 		if(user != null) {
 			
 			Optional<Script> opt = scriptRepository.findById(script.getId());
 			if(opt.isPresent()) {
 				
+				History old = new History();
+				old.setComment(request.getParameter("comment"));
+				old.setContent(opt.get().getContent());
+			
+				
+				
+				old.setDate(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(new Date()));
+				old.setScript(script);
+				
+				History saved = historyRepository.save(old);
+				script.getHistory().add(saved);
+				
 				script.setUser(user);
 				scriptRepository.save(script);
 
-				List<Script> allScripts = scriptRepository.findAll();
-				List<Script> usersScript = new ArrayList<>();
-				
-				for(Script s : allScripts) {
-					if(s.getUser().getId() == user.getId())
-					usersScript.add(s);
-				}
-				user.setScripts(usersScript);
+				setUserScripts();
 			}
 			else {
 				script.setUser(user);
@@ -196,6 +209,7 @@ public class ScriptController {
 	@RequestMapping("/script/{id}")
 	@GetMapping
 	public String scriptEdit(@PathVariable("id") int id, ModelMap model) {
+		model.addAttribute("address", address);
 		
 		if(user == null)
 			return "non_connected";
@@ -230,10 +244,37 @@ public class ScriptController {
 		return "index";
 		
 	}
+	
+	@RequestMapping("/script/delete/{id}")
+	@GetMapping
+	public RedirectView scriptDelete(@PathVariable("id") int id, ModelMap model) {
+		model.addAttribute("address", address);
+		
+		if(user == null)
+			return new RedirectView("../../login");
+		
+		Optional<Script> opt = scriptRepository.findById(id);
+		
+		if(opt.isPresent()) {
+			Script s = opt.get();
+			if(s.getUser().getId() == user.getId()) {
+				
+				historyRepository.deleteAllByScriptId(id);
+				
+				scriptRepository.deleteById(id);
+				setUserScripts();
+				
+			}
+		}
+		
+		return new RedirectView("../../index");
+		
+	}
 
 	
 	@RequestMapping("non_connected")
-	public String nonConnected() {
+	public String nonConnected(ModelMap model) {
+		model.addAttribute("address", address);
 		return "non_connected";
 	}
 	
@@ -241,17 +282,9 @@ public class ScriptController {
 
 	@RequestMapping("search")
 	public String search(ModelMap model) {
+		model.addAttribute("address", address);
 		
 		if(user != null) {
-		
-			RestTemplate restTemplate = new RestTemplate();
-			HttpHeaders header = new HttpHeaders();
-			header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			
-			HttpEntity entity = new HttpEntity<>(header);
-			/*ResponseEntity<List<Script>> response = restTemplate.exchange("http://localhost:8080/rest/"+user.getId(), HttpMethod.POST, entity, new ParameterizedTypeReference<List<Script>>(){});
-	 
-			List<Script> scripts = response.getBody();*/
 			
 			model.addAttribute("scriptsTrouves", user.getScripts());
 			model.addAttribute("user", user);

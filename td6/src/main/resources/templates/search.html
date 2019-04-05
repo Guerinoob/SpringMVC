@@ -1,10 +1,16 @@
 {{ > header}}
 
-	<h2>Welcome {{user.identity}} ({{user.email}}). <a href="http://localhost:8080/logout">Disconnect</a></h2>
+	<h2>Welcome {{user.identity}} ({{user.email}}). <a href="{{address}}/logout">Disconnect</a></h2>
 	
 	<h3>Search for scripts : </h3>
 	
 	<form class="ui fluid form">
+        <div class="field">
+            <label for="title">Title</label><input type="checkbox" name="searchOptions[]" id="title" value="title" />
+            <label for="description">Description</label><input type="checkbox" name="searchOptions[]" id="description" value="description" />
+            <label for="creationDate">Creation date</label><input type="checkbox" name="searchOptions[]" id="creationDate" value="creationDate" />
+        </div>
+
 		<div class="field">
 			<input type="text" name="search" id="search" onInput="fire_ajax_submit()"/>
 		</div>
@@ -19,7 +25,8 @@
 			<th>ID</th>
 			<th>Name</th>
 			<th>Description</th>
-			<th>Creation date</th>
+            <th>Creation date</th>
+            <th></th>
 		</tr>
 		</thead>
 	
@@ -29,43 +36,50 @@
 					<td>{{id}}</td>
 					<td><a href="script/{{id}}">{{title}}</a></td>
 					<td>{{description}}</td>
-					<td>{{creationDate}}</td>
+                    <td>{{creationDate}}</td>
+                    <td><a href="{{address}}/script/delete/{{id}}">
+                            <button class="circular red ui icon button" >
+                                <i class="delete icon"></i>
+                            </button>
+                        </a>
+                    </td>
 				</tr>
 			{{/scriptsTrouves}}
 		</tbody>
 	</table>
 	
-	<button class="ui neutral button"><a href="http://localhost:8080/script/new">Add a script</a></button>
+	<button class="ui neutral button"><a href="{{address}}/script/new">Add a script</a></button>
 	
 	
 	<script type="text/javascript">
 	function fire_ajax_submit() {
 
-	    var search = $("#search").val();
+        var search = $("#search").val();
+        var searchOptions = "searchOptions=";
+        
+        var cols = document.getElementsByName('searchOptions[]');
+
+        for(i = 0; i < cols.length; i++){
+            if(cols[i].checked){
+                searchOptions += cols[i].value+",";
+            }
+        }
+
+        console.log(searchOptions);
 
 	    $.ajax({
 	        type: "POST",
 	        contentType: "application/x-www-form-urlencoded",
-	        url: "/rest/{{user.id}}",
-	        data: "search="+search,
+	        url: "{{address}}/rest/{{user.id}}",
+	        data: "search="+search+"&"+searchOptions,
 	        cache: false,
 	        timeout: 600000,
 	        success: function (data) {
-
-	            //var json = "<h4>Ajax Response</h4><pre>"
-	              //  + JSON.stringify(data, null, 4) + "</pre>";
-	           // $('#feedback').html(json);
-
-	            console.log("SUCCESS : ", data);
 	            
 	            document.getElementById('scripts').innerHTML = data;
 
 	        },
 	        error: function (e) {
-
-	            var json = "<h4>Ajax Response</h4><pre>"
-	                + e.responseText + "</pre>";
-	            $('#feedback').html(json);
 
 	            console.log("ERROR : ", e);
 
